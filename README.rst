@@ -26,7 +26,7 @@ Features
 Installation
 ------------
 
-**Note:** Plugins work at Poetry with version 1.2.0 or above.
+**Note:** Plugins work at Poetry with version 1.8.3 or above.
 
 You can install plugin via ``poetry``
 

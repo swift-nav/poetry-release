@@ -69,10 +69,6 @@ major, minor, patch, release, rc, beta, alpha.
 
     def __init__(self) -> None:
         super().__init__()
-        self.executor = Executor(
-            self.io,
-            self.option("dry-run"),
-        )
 
     def handle(self) -> int:
         try:
@@ -89,6 +85,11 @@ major, minor, patch, release, rc, beta, alpha.
 
             cli_cfg = Config.from_cli(self.option)
             cfg.update(cli_cfg)
+
+            self.executor = Executor(
+                self.io,
+                self.option("dry-run"),
+            )
 
             # Check git
             if not git.repo_exists():
@@ -121,16 +122,18 @@ major, minor, patch, release, rc, beta, alpha.
                 return 1
 
             if release.current_version == release.next_version:
-                self.line("<fg=yellow>Version doesn't changed.</>")
+                self.line("<fg=yellow>Version was not changed.</>")
                 return 1
 
             tmpl = Template(
                 package_name=self.poetry.package.name,
                 prev_version=release.current_version,
                 version=release.next_version,
-                next_version=release.next_pre_version
-                if release.has_next_pre_version
-                else "",
+                next_version=(
+                    release.next_pre_version
+                    if release.has_next_pre_version
+                    else ""
+                ),
                 date=datetime.today().strftime("%Y-%m-%d"),
             )
 
@@ -197,6 +200,7 @@ major, minor, patch, release, rc, beta, alpha.
                 "Push commit with next iteration version.",
             )
 
+            self.executor.run()
         except RuntimeError as e:
             self.line(f"<fg=red>{e}</>")
             return 1
