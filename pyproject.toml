@@ -12,7 +12,7 @@ packages = [{ include = "poetry_release" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-poetry = "^1.8.3"
+poetry = ">=1.8.3"
 pytest = "^8.3.2"
 
 [tool.poetry.plugins."poetry.application.plugin"]
